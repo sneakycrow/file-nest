@@ -3,10 +3,6 @@ pub const DEFAULT_PORT: &str = "3000"; // This is stored as a string to match en
 pub const DEFAULT_HOST: &str = "0.0.0.0";
 
 pub struct Config {
-    pub server: ServerConfig,
-}
-
-pub struct ServerConfig {
     pub port: String,
     pub host: String,
     pub uploads_dir: String,
@@ -25,15 +21,13 @@ impl Config {
             std::env::var("UPLOADS_DIR").unwrap_or_else(|_| UPLOADS_DIRECTORY.to_string());
 
         Config {
-            server: ServerConfig {
-                port,
-                host,
-                uploads_dir,
-            },
+            port,
+            host,
+            uploads_dir,
         }
     }
     /// Formats the host and port into an address for a TCPListener to bind to
     pub fn get_address(&self) -> String {
-        format!("{}:{}", &self.server.host, &self.server.port)
+        format!("{}:{}", &self.host, &self.port)
     }
 }

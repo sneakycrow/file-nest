@@ -24,10 +24,10 @@ async fn main() {
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
-    // Initialize our server configuration
+    // Initialize our application configuration
     let config = Config::new();
     // Create our directory for storing uploads
-    tokio::fs::create_dir_all(&config.server.uploads_dir)
+    tokio::fs::create_dir_all(&config.uploads_dir)
         .await
         .unwrap_or_else(|_| tracing::warn!("'uploads' directory already exists"));
     // Create our listener on configured address

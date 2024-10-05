@@ -20,7 +20,7 @@ pub async fn handle_upload_mp4(
         let data = field.bytes().await.unwrap();
 
         if name == "file" && !file_written {
-            let file_path = format!("{}/{}.mp4", state.config.server.uploads_dir, file_id);
+            let file_path = format!("{}/{}.mp4", state.config.uploads_dir, file_id);
             let mut file = File::create(&file_path).await.unwrap();
             file.write_all(&data).await.unwrap();
             file_written = true;
