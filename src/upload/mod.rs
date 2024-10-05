@@ -1,17 +1,17 @@
 use std::sync::Arc;
 
+use axum::extract::Multipart;
 use axum::extract::State;
-use axum::response::IntoResponse;
-use axum::{extract::Multipart, http::StatusCode};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 
+use crate::templates::UploadTemplate;
 use crate::AppState;
 
 pub async fn handle_upload_mp4(
     State(state): State<Arc<AppState>>,
     mut multipart: Multipart,
-) -> impl IntoResponse {
+) -> UploadTemplate<'static> {
     let file_id = nanoid::nanoid!();
     let mut file_written = false;
 
@@ -28,8 +28,8 @@ pub async fn handle_upload_mp4(
     }
 
     if file_written {
-        Ok(StatusCode::OK)
+        UploadTemplate::new()
     } else {
-        Err(StatusCode::BAD_REQUEST)
+        UploadTemplate::new().upload_error("Some error uploading file")
     }
 }

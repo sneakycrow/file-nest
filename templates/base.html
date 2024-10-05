@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}File-Nest{% endblock %}</title>
+        <link rel="stylesheet" href="/assets/main.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+            rel="stylesheet"
+        />
+        {% block head %}{% endblock %}
+    </head>
+    <body
+        class="grid-rows-main dark dark:bg-black dark:text-white bg-white text-black p-4"
+    >
+        <header>{% include "header.html" %}</header>
+        <main>{% block content %}{% endblock %}</main>
+        <footer>{% include "footer.html" %}</footer>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>
