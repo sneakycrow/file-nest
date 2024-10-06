@@ -1,4 +1,7 @@
 # file-nest
+
+[![build](https://github.com/sneakycrow/file-nest/actions/workflows/build.yml/badge.svg)](https://github.com/sneakycrow/file-nest/actions/workflows/build.yml)
+
 file-nest is a personal file sharing software. It includes uploading, downloading, and streaming various files.
 
 ## Development
