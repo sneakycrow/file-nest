@@ -11,6 +11,8 @@ Requirements:
 - Node.js (22.4.1)
 - Justfile (1.14.0)
 
+### Running locally
+
 1. Install with `just install`
 2. Start the server with `just dev`
 3. (Optional) Watch CSS changes with `just watch-css` in a separate terminal
