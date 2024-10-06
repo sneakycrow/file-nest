@@ -13,6 +13,7 @@ pub async fn handle_upload_mp4(
     mut multipart: Multipart,
 ) -> UploadTemplate {
     let file_id = nanoid::nanoid!();
+    let file_path = format!("{}/{}.mp4", state.config.uploads_dir, file_id);
     let mut file_written = false;
 
     while let Some(field) = multipart.next_field().await.unwrap() {
@@ -20,7 +21,6 @@ pub async fn handle_upload_mp4(
         let data = field.bytes().await.unwrap();
 
         if name == "file" && !file_written {
-            let file_path = format!("{}/{}.mp4", state.config.uploads_dir, file_id);
             let mut file = File::create(&file_path).await.unwrap();
             file.write_all(&data).await.unwrap();
             file_written = true;
@@ -28,6 +28,10 @@ pub async fn handle_upload_mp4(
     }
 
     if file_written {
+        let query = sqlx::query("INSERT INTO videos (id, path) VALUES ($1, $2)")
+            .bind(&file_id)
+            .bind(file_path);
+        query.execute(&state.db).await.unwrap();
         UploadTemplate::new().upload_id(&file_id.to_string())
     } else {
         UploadTemplate::new().upload_error("Some error uploading file")

@@ -23,6 +23,7 @@
         </span>
         {% if upload_id.is_some() %}
             <span class="block text-xs">Upload ID: {{ upload_id.as_ref().unwrap() }}</span>
+            <a href="/watch?v={{ upload_id.as_ref().unwrap() }}">Watch here</a>
         {% endif %}
     </div>
     {% endif %}
