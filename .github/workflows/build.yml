@@ -29,4 +29,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - uses: Swatinem/rust-cache@v2
+      - run: just install
       - run: just build
