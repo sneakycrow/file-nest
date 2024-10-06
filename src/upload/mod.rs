@@ -11,7 +11,7 @@ use crate::AppState;
 pub async fn handle_upload_mp4(
     State(state): State<Arc<AppState>>,
     mut multipart: Multipart,
-) -> UploadTemplate<'static> {
+) -> UploadTemplate {
     let file_id = nanoid::nanoid!();
     let mut file_written = false;
 
@@ -28,7 +28,7 @@ pub async fn handle_upload_mp4(
     }
 
     if file_written {
-        UploadTemplate::new()
+        UploadTemplate::new().upload_id(&file_id.to_string())
     } else {
         UploadTemplate::new().upload_error("Some error uploading file")
     }

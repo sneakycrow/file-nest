@@ -11,17 +11,26 @@ pub async fn index_page() -> IndexTemplate {
 
 #[derive(Template)]
 #[template(path = "pages/upload.html")]
-pub struct UploadTemplate<'a> {
-    pub upload_error: Option<&'a str>,
+pub struct UploadTemplate {
+    pub upload_error: Option<String>,
+    pub upload_id: Option<String>,
 }
 
-impl<'a> UploadTemplate<'a> {
+impl UploadTemplate {
     pub fn new() -> Self {
-        UploadTemplate { upload_error: None }
+        UploadTemplate {
+            upload_error: None,
+            upload_id: None,
+        }
     }
 
-    pub fn upload_error(mut self, upload_error: &'a str) -> Self {
-        self.upload_error = Some(upload_error);
+    pub fn upload_error(mut self, upload_error: &str) -> Self {
+        self.upload_error = Some(upload_error.to_string());
+        self
+    }
+
+    pub fn upload_id(mut self, upload_id: &str) -> Self {
+        self.upload_id = Some(upload_id.to_string());
         self
     }
 }
