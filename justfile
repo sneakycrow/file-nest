@@ -1,5 +1,13 @@
 set dotenv-load := true
 
+install:
+    cargo check
+    npm install
+
+build:
+    cargo build --release
+    npm run build
+
 start:
     cargo run
 
