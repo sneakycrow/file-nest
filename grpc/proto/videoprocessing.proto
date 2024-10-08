@@ -1,0 +1,18 @@
+syntax = "proto3";
+package videoprocessing;
+
+service RawVideoProcessor {
+    rpc ProcessRawVideo (ProcessRawVideoRequest) returns (ProcessRawVideoResponse);
+}
+
+message ProcessRawVideoRequest {
+    // The Database ID of the video to be processed
+    string id = 1;
+    // The path to the video file to process
+    string path = 2;
+}
+
+message ProcessRawVideoResponse {
+    // The final status of the processing request
+    string status = 1;
+}
