@@ -11,6 +11,7 @@ use runner::run_worker;
 
 const CONCURRENCY: usize = 50;
 
+// TODO: Add intake for passing jobs into queue
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     // Create a database connection
