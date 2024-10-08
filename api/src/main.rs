@@ -1,5 +1,4 @@
 mod config;
-pub mod db;
 mod templates;
 mod upload;
 mod watch;
