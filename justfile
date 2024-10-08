@@ -9,7 +9,7 @@ build:
     npm run build
 
 start:
-    cargo run
+    cargo run -p api
 
 watch-css:
     npm run watch:tailwind
