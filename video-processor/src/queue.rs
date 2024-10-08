@@ -12,6 +12,7 @@ const MAX_FAILED_ATTEMPTS: i32 = 3;
 
 #[async_trait::async_trait]
 pub trait Queue: Send + Sync + Debug {
+    /// pushes a job to the queue
     async fn push(
         &self,
         job: Message,
@@ -19,22 +20,28 @@ pub trait Queue: Send + Sync + Debug {
     ) -> Result<(), Error>;
     /// pull fetches at most `number_of_jobs` from the queue.
     async fn pull(&self, number_of_jobs: u32) -> Result<Vec<Job>, Error>;
+    /// deletes a job from the queue
     async fn delete_job(&self, job_id: Uuid) -> Result<(), Error>;
+    /// fails a job in the queue
     async fn fail_job(&self, job_id: Uuid) -> Result<(), Error>;
+    /// clears the queue
     async fn clear(&self) -> Result<(), Error>;
 }
 
+/// The job to be processed, containing the message payload
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Job {
     pub id: Uuid,
     pub message: Message,
 }
 
+/// The payload of the job, containing the different jobs and their required data
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Message {
     ProcessRawVideo,
 }
 
+/// The queue itself
 #[derive(Debug, Clone)]
 pub struct PostgresQueue {
     db: PgPool,

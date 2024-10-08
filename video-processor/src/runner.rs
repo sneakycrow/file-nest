@@ -42,7 +42,6 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
             })
             .await;
 
-        // sleep not to overload our database
         tokio::time::sleep(Duration::from_millis(125)).await;
     }
 }

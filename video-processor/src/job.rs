@@ -2,6 +2,7 @@ use crate::queue::{Job, Message};
 use sqlx::types::Json;
 use uuid::Uuid;
 
+/// A Postgres representation of a Job
 #[derive(sqlx::FromRow, Debug, Clone)]
 pub struct PostgresJob {
     id: Uuid,
@@ -14,6 +15,7 @@ pub struct PostgresJob {
     message: Json<Message>,
 }
 
+/// The different status' that a job can be in
 // We use a INT as Postgres representation for performance reasons
 #[derive(Debug, Clone, sqlx::Type, PartialEq)]
 #[repr(i32)]
