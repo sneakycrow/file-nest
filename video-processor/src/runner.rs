@@ -5,7 +5,7 @@ use std::{sync::Arc, time::Duration};
 
 pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
     loop {
-        let jobs = match queue.pull(concurrency as u32).await {
+        let jobs = match queue.pull(concurrency as i32).await {
             Ok(jobs) => jobs,
             Err(err) => {
                 // Trace the error

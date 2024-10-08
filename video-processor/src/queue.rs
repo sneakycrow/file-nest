@@ -19,7 +19,7 @@ pub trait Queue: Send + Sync + Debug {
         scheduled_for: Option<chrono::DateTime<chrono::Utc>>,
     ) -> Result<(), Error>;
     /// pull fetches at most `number_of_jobs` from the queue.
-    async fn pull(&self, number_of_jobs: u32) -> Result<Vec<Job>, Error>;
+    async fn pull(&self, number_of_jobs: i32) -> Result<Vec<Job>, Error>;
     /// deletes a job from the queue
     async fn delete_job(&self, job_id: Uuid) -> Result<(), Error>;
     /// fails a job in the queue
@@ -111,7 +111,7 @@ impl Queue for PostgresQueue {
         Ok(())
     }
 
-    async fn pull(&self, number_of_jobs: u32) -> Result<Vec<Job>, Error> {
+    async fn pull(&self, number_of_jobs: i32) -> Result<Vec<Job>, Error> {
         let number_of_jobs = if number_of_jobs > 100 {
             100
         } else {
