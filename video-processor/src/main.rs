@@ -2,8 +2,9 @@ mod error;
 mod job;
 mod queue;
 mod runner;
+mod server;
 
-use std::{sync::Arc, time::Duration};
+use std::sync::Arc;
 
 pub use error::Error;
 use queue::PostgresQueue;
@@ -21,8 +22,9 @@ async fn main() -> Result<(), anyhow::Error> {
     // Pass our queue (shared ref) to our runner
     let worker_queue = queue.clone();
     tokio::spawn(async move { run_worker(worker_queue, CONCURRENCY).await });
-
-    tokio::time::sleep(Duration::from_secs(2)).await;
-
+    // Start our server to start receiving job requests
+    server::start_server(queue)
+        .await
+        .map_err(|_err| Error::Internal("Could not start grpc server".to_string()))?;
     Ok(())
 }

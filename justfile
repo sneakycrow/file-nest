@@ -20,3 +20,6 @@ dev:
 # This won't dereference them in the database
 clean-uploads:
     rm -rf uploads/*
+
+start-queue:
+    cargo run -p video-processor
