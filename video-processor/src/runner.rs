@@ -49,7 +49,7 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
 async fn handle_job(job: Job) -> Result<(), Error> {
     match job.message {
         message @ Message::ProcessRawVideo { .. } => {
-            println!("Sending sign in email: {:?}", &message);
+            println!("Processing raw video: {:?}", &message);
         }
     };
 
