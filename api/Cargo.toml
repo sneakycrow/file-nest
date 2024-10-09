@@ -16,3 +16,6 @@ tower-http = { version = "0.6", features = ["fs", "trace"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 db = { path = "../db" }
+grpc = { path = "../grpc" }
+tonic = "0.12"
+prost = "0.13"

@@ -24,6 +24,10 @@ pub struct AppState {
     config: Config,
 }
 
+pub enum AppError {
+    QueueConnectionError,
+}
+
 #[tokio::main]
 async fn main() {
     // Start the tracer
