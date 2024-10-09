@@ -49,7 +49,38 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
 async fn handle_job(job: Job) -> Result<(), Error> {
     match job.message {
         message @ Message::ProcessRawVideo { .. } => {
-            println!("Processing raw video: {:?}", &message);
+            tracing::debug!("Processing raw video: {:?}", &message);
+            let (input_path, video_id) = match &message {
+                Message::ProcessRawVideo { path, video_id } => (path, video_id),
+            };
+
+            let output_path = format!("{}.m3u8", input_path.trim_end_matches(".mp4"));
+
+            let output = std::process::Command::new("ffmpeg")
+                .args(&[
+                    "-i",
+                    input_path,
+                    "-c:v",
+                    "libx264",
+                    "-c:a",
+                    "aac",
+                    "-f",
+                    "hls",
+                    "-hls_time",
+                    "10",
+                    "-hls_list_size",
+                    "0",
+                    &output_path,
+                ])
+                .output()
+                .map_err(|e| Error::VideoProcessingError(e.to_string()))?;
+
+            if !output.status.success() {
+                tracing::error!("Error processing video into hls");
+                let error = String::from_utf8_lossy(&output.stderr);
+                return Err(Error::VideoProcessingError(error.to_string()));
+            }
+            tracing::debug!("Successfully processed video {}", &video_id);
         }
     };
 

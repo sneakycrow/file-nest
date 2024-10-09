@@ -20,8 +20,15 @@ impl RawVideoProcessor for VideoProcessorImpl {
         request: Request<ProcessRawVideoRequest>,
     ) -> Result<Response<ProcessRawVideoResponse>, Status> {
         println!("Received a request!");
-        // Push a job to the queue
-        match self.queue.push(Message::ProcessRawVideo, None).await {
+        let inner_req = request.into_inner();
+        // Why do I need to clone this for it to work?
+        let path = inner_req.clone().path;
+        let video_id = inner_req.clone().id;
+        match self
+            .queue
+            .push(Message::ProcessRawVideo { path, video_id }, None)
+            .await
+        {
             Ok(_) => {
                 let response = ProcessRawVideoResponse {
                     status: "Job added to queue successfully".to_string(),
