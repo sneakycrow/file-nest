@@ -2,6 +2,9 @@ use std::sync::Arc;
 
 use axum::extract::Multipart;
 use axum::extract::State;
+use sqlx::types::chrono;
+use sqlx::Pool;
+use sqlx::Postgres;
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 
@@ -12,7 +15,7 @@ pub async fn handle_upload_mp4(
     State(state): State<Arc<AppState>>,
     mut multipart: Multipart,
 ) -> UploadTemplate {
-    let file_id = nanoid::nanoid!();
+    let file_id = nanoid::nanoid!(10);
     let file_path = format!("{}/{}.mp4", state.config.uploads_dir, file_id);
     let mut file_written = false;
 
@@ -28,12 +31,54 @@ pub async fn handle_upload_mp4(
     }
 
     if file_written {
-        let query = sqlx::query("INSERT INTO videos (id, path) VALUES ($1, $2)")
-            .bind(&file_id)
-            .bind(file_path);
-        query.execute(&state.db).await.unwrap();
-        UploadTemplate::new().upload_id(&file_id.to_string())
+        let video = save_raw_upload(&state.db, file_id, file_path)
+            .await
+            .map_err(|err| return UploadTemplate::new().upload_error(&err))
+            .unwrap();
+        UploadTemplate::new().upload_id(&video.id)
     } else {
         UploadTemplate::new().upload_error("Some error uploading file")
     }
+}
+
+/// A Postgres representation of a Video
+#[derive(sqlx::FromRow, Debug, Clone)]
+pub struct Video {
+    id: String,
+    created_at: chrono::DateTime<chrono::Utc>,
+    updated_at: chrono::DateTime<chrono::Utc>,
+
+    raw_file_path: String,
+    processed_file_path: String,
+    processing_status: String,
+}
+
+/// Saves a raw video upload to the database
+async fn save_raw_upload(
+    db: &Pool<Postgres>,
+    id: String,
+    file_path: String,
+) -> Result<Video, String> {
+    let now = chrono::Utc::now();
+    let video = Video {
+        id,
+        created_at: now,
+        updated_at: now,
+        raw_file_path: file_path,
+        processed_file_path: "".to_string(),
+        processing_status: "pending".to_string(),
+    };
+    let query = sqlx::query(
+        "INSERT INTO videos (id, created_at, updated_at, raw_file_path, processing_status)
+            VALUES ($1, $2, $3, $4, $5)",
+    )
+    .bind(&video.id)
+    .bind(&video.created_at)
+    .bind(&video.updated_at)
+    .bind(&video.raw_file_path)
+    .bind(&video.processing_status);
+
+    query.execute(db).await.unwrap();
+
+    Ok(video)
 }

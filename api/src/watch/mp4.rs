@@ -12,7 +12,7 @@ use sqlx::PgPool;
 use tokio::fs::File;
 use tokio_util::io::ReaderStream;
 
-use crate::AppState;
+use crate::{templates::WatchTemplate, AppState};
 
 #[derive(Deserialize)]
 pub struct WatchQuery {
@@ -29,7 +29,7 @@ pub async fn handle_stream_mp4(
         return (StatusCode::BAD_REQUEST, "Video ID is required").into_response();
     }
     // Get the file path for the video stored in the database
-    let video_path = match get_video_by_id(&state.db, params.v).await {
+    let video_path = match get_raw_video_by_id(&state.db, params.v).await {
         Ok(path) => path,
         Err(_) => return (StatusCode::NOT_FOUND, "Video not found").into_response(),
     };
@@ -55,11 +55,19 @@ pub async fn handle_stream_mp4(
     }
 }
 
-async fn get_video_by_id(db: &PgPool, id: String) -> Result<String, sqlx::Error> {
+async fn get_raw_video_by_id(db: &PgPool, id: String) -> Result<String, sqlx::Error> {
     let row: (String,) = sqlx::query_as("SELECT path FROM videos WHERE id = $1")
         .bind(id)
         .fetch_one(db)
         .await?;
 
     Ok(row.0)
+}
+
+/// Handle streaming of HLS video files
+pub async fn handle_stream_video(Query(params): Query<WatchQuery>) -> WatchTemplate {
+    WatchTemplate {
+        video_id: params.v.clone(),
+        stream_url: format!("/uploads/{}.m3u8", params.v),
+    }
 }
