@@ -10,6 +10,13 @@ pub async fn index_page() -> IndexTemplate {
 }
 
 #[derive(Template)]
+#[template(path = "pages/watch.html")]
+pub struct WatchTemplate {
+    pub video_id: String,
+    pub stream_url: String,
+}
+
+#[derive(Template, Debug)]
 #[template(path = "pages/upload.html")]
 pub struct UploadTemplate {
     pub upload_error: Option<String>,
