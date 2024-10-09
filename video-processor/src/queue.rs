@@ -38,7 +38,7 @@ pub struct Job {
 /// The payload of the job, containing the different jobs and their required data
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Message {
-    ProcessRawVideo,
+    ProcessRawVideo { path: String, video_id: String },
 }
 
 /// The queue itself

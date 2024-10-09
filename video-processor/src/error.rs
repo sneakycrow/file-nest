@@ -10,6 +10,10 @@ pub enum Error {
     NotFound(String),
     #[error("Migrating database: {0}")]
     DatabaseMigration(String),
+    #[error("Invalid job message: {0}")]
+    InvalidJobMessage(String),
+    #[error("Video Processing: {0}")]
+    VideoProcessingError(String),
 }
 
 impl std::convert::From<sqlx::Error> for Error {
