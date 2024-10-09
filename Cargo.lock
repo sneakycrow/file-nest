@@ -422,6 +422,8 @@ name = "db"
 version = "0.1.0"
 dependencies = [
  "sqlx",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
