@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 askama = "0.12.1"
-axum = { version = "0.7", features = ["multipart", "tracing"] }
+axum = { version = "0.7", features = ["multipart", "tracing", "ws"] }
 askama_axum = "0.4.0"
 nanoid = "0.4.0"
 serde = { version = "1.0", features = ["derive"] }
