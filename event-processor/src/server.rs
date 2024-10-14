@@ -19,7 +19,7 @@ impl RawVideoProcessor for VideoProcessorImpl {
         &self,
         request: Request<ProcessRawVideoRequest>,
     ) -> Result<Response<ProcessRawVideoResponse>, Status> {
-        println!("Received a request!");
+        tracing::debug!("Received a request!");
         let inner_req = request.into_inner();
         // Why do I need to clone this for it to work?
         let path = inner_req.clone().path;
