@@ -1,9 +1,13 @@
 use crate::error::Error;
 use crate::queue::{Job, Message, Queue};
 use futures::{stream, StreamExt};
+use sqlx::{Pool, Postgres};
 use std::{sync::Arc, time::Duration};
 
 pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
+    let db_conn = db::connect_to_database()
+        .await
+        .expect("Could not create database connection");
     loop {
         let jobs = match queue.pull(concurrency as i32).await {
             Ok(jobs) => jobs,
@@ -25,7 +29,7 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
             .for_each_concurrent(concurrency, |job| async {
                 let job_id = job.id;
 
-                let res = match handle_job(job).await {
+                let res = match handle_job(job, &db_conn).await {
                     Ok(_) => queue.delete_job(job_id).await,
                     Err(err) => {
                         println!("run_worker: handling job({}): {}", job_id, &err);
@@ -46,16 +50,16 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
     }
 }
 
-async fn handle_job(job: Job) -> Result<(), Error> {
+async fn handle_job(job: Job, db: &Pool<Postgres>) -> Result<(), Error> {
     match job.message {
         message @ Message::ProcessRawVideo { .. } => {
             tracing::debug!("Processing raw video: {:?}", &message);
+            // Get the required data to parse the video
             let (input_path, video_id) = match &message {
                 Message::ProcessRawVideo { path, video_id } => (path, video_id),
             };
-
+            // Create our HLS stream from the mp4
             let output_path = format!("{}.m3u8", input_path.trim_end_matches(".mp4"));
-
             let output = std::process::Command::new("ffmpeg")
                 .args(&[
                     "-i",
@@ -80,6 +84,12 @@ async fn handle_job(job: Job) -> Result<(), Error> {
                 let error = String::from_utf8_lossy(&output.stderr);
                 return Err(Error::VideoProcessingError(error.to_string()));
             }
+            // Update the video ID status
+            sqlx::query("UPDATE videos SET processing_status = 'processed' WHERE id = $1")
+                .bind(&video_id)
+                .execute(db)
+                .await
+                .map_err(|e| Error::VideoProcessingError(e.to_string()))?;
             tracing::debug!("Successfully processed video {}", &video_id);
         }
     };

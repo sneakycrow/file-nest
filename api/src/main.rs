@@ -1,4 +1,5 @@
 mod config;
+mod events;
 mod templates;
 mod upload;
 mod watch;
@@ -9,6 +10,7 @@ use axum::{
     Router,
 };
 use config::Config;
+use events::routes::event_handler;
 use sqlx::PgPool;
 use std::{path::PathBuf, sync::Arc};
 use tower_http::{
@@ -60,6 +62,7 @@ async fn main() {
         .route("/", get(templates::index_page))
         .route("/watch", get(watch::mp4::handle_stream_video))
         .route("/upload", post(upload::handle_upload_mp4))
+        .route("/events", get(event_handler))
         .layer(DefaultBodyLimit::max(10 * 1024 * 1024 * 1024))
         .nest_service("/assets", ServeDir::new(assets_path))
         .nest_service("/uploads", ServeDir::new(uploads_path))

@@ -14,5 +14,5 @@ Requirements:
 ### Running locally
 
 1. Install with `just install`
-2. Start the server with `just dev`
+2. Start the server with `just start`
 3. (Optional) Watch CSS changes with `just watch-css` in a separate terminal
