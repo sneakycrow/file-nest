@@ -1,7 +1,10 @@
 {% extends "base.html" %} {% block title %} File Nest - Secure File Storage
 {%endblock %} {% block content %}
-<div class="my-8">
-    <h1 class="text-3xl font-bold mb-4">Welcome to File Nest</h1>
-    <p class="mb-4">Secure file storage for all your needs.</p>
-</div>
-{% include "upload_form.html" %} {% endblock %}
+<section class="w-full flex flex-col space-y-4 justify-center items-center">
+    <div class="text-center flex flex-col">
+        <h1 class="text-3xl font-bold mb-4">Welcome to File Nest</h1>
+        <p class="mb-4">Secure file storage for all your needs.</p>
+    </div>
+    {% include "upload_form.html" %}
+</section>
+{% endblock %}
