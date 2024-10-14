@@ -1,5 +1,8 @@
 set dotenv-load := true
 
+default:
+    just --list
+
 install:
     cargo check
     npm install
@@ -13,9 +16,6 @@ start:
 
 watch-css:
     npm run watch:tailwind
-
-dev:
-    cargo watch --ignore 'assets/*' -x run
 
 # This won't dereference them in the database
 clean-uploads:
