@@ -14,6 +14,9 @@ build:
 start:
     cargo run -p api
 
+dev:
+    bacon ex -- api
+
 watch-css:
     npm run watch:tailwind
 
