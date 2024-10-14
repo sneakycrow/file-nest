@@ -43,10 +43,9 @@
         };
 
         socket.onmessage = function (event) {
-            console.log(event.data);
             const data = JSON.parse(event.data);
-            if (data.payload) {
-                const payload = data.payload;
+            if (data.event.payload) {
+                const payload = data.event.payload;
                 addEventToList(`Video ${payload.video_id}: ${payload.status}`);
             }
         };
