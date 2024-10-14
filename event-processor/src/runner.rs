@@ -4,10 +4,7 @@ use futures::{stream, StreamExt};
 use sqlx::{Pool, Postgres};
 use std::{sync::Arc, time::Duration};
 
-pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
-    let db_conn = db::connect_to_database()
-        .await
-        .expect("Could not create database connection");
+pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize, db_conn: &Pool<Postgres>) {
     loop {
         let jobs = match queue.pull(concurrency as i32).await {
             Ok(jobs) => jobs,
@@ -29,7 +26,7 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize) {
             .for_each_concurrent(concurrency, |job| async {
                 let job_id = job.id;
 
-                let res = match handle_job(job, &db_conn).await {
+                let res = match handle_job(job, db_conn).await {
                     Ok(_) => queue.delete_job(job_id).await,
                     Err(err) => {
                         println!("run_worker: handling job({}): {}", job_id, &err);
