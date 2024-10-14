@@ -17,6 +17,9 @@ start:
 dev:
     bacon ex -- api
 
+migrate:
+    sqlx migrate run
+
 watch-css:
     npm run watch:tailwind
 
