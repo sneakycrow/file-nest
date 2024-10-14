@@ -85,13 +85,11 @@ async fn handle_job(job: Job, db: &Pool<Postgres>) -> Result<(), Error> {
                 return Err(Error::VideoProcessingError(error.to_string()));
             }
             // Update the video ID status
-            sqlx::query!(
-                "UPDATE videos SET processing_status = 'processed' WHERE id = $1",
-                video_id
-            )
-            .execute(db)
-            .await
-            .map_err(|e| Error::VideoProcessingError(e.to_string()))?;
+            sqlx::query("UPDATE videos SET processing_status = 'processed' WHERE id = $1")
+                .bind(&video_id)
+                .execute(db)
+                .await
+                .map_err(|e| Error::VideoProcessingError(e.to_string()))?;
             tracing::debug!("Successfully processed video {}", &video_id);
         }
     };
