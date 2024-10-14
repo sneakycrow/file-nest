@@ -31,7 +31,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let queue = Arc::new(PostgresQueue::new(db.clone()));
     // Pass our queue (shared ref) to our runner
     let worker_queue = queue.clone();
-    tokio::spawn(async move { run_worker(worker_queue, CONCURRENCY).await });
+    tokio::spawn(async move { run_worker(worker_queue, CONCURRENCY, &db).await });
     // Start our server to start receiving job requests
     tracing::debug!("Starting gRPC server");
     server::start_server(queue)
