@@ -22,4 +22,4 @@ clean-uploads:
     rm -rf uploads/*
 
 start-queue:
-    cargo run -p video-processor
+    cargo run -p event-processor

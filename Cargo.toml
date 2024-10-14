@@ -1,4 +1,4 @@
 [workspace]
-members = ["api", "video-processor", "libs/*"]
+members = ["api", "event-processor", "libs/*"]
 
 resolver = "2"
