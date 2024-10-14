@@ -20,7 +20,7 @@ async fn main() -> Result<(), anyhow::Error> {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "video_processor=debug,db=debug".into()),
+                .unwrap_or_else(|_| "event_processor=debug,db=debug".into()),
         )
         .with(tracing_subscriber::fmt::layer())
         .init();

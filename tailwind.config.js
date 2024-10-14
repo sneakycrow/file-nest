@@ -34,7 +34,8 @@ module.exports = {
     extend: {
       colors: {
         black: "#1f1f1f",
-        white: "#fefcd9",
+        white: "#ffe0bc",
+        primary: "#9a3177",
       },
       gridTemplateColumns: {
         header: "100px repeat(5, 1fr)",

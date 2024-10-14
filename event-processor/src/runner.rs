@@ -24,6 +24,7 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize, db_conn: &Poo
 
         stream::iter(jobs)
             .for_each_concurrent(concurrency, |job| async {
+                tracing::debug!("Starting job {}", job.id);
                 let job_id = job.id;
 
                 let res = match handle_job(job, db_conn).await {
@@ -55,6 +56,11 @@ async fn handle_job(job: Job, db: &Pool<Postgres>) -> Result<(), Error> {
             let (input_path, video_id) = match &message {
                 Message::ProcessRawVideo { path, video_id } => (path, video_id),
             };
+            tracing::debug!(
+                "Processing video: input_path={}, video_id={}",
+                input_path,
+                video_id
+            );
             // Create our HLS stream from the mp4
             let output_path = format!("{}.m3u8", input_path.trim_end_matches(".mp4"));
             let output = std::process::Command::new("ffmpeg")

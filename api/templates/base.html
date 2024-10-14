@@ -11,10 +11,11 @@
             href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
             rel="stylesheet"
         />
+        <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
         {% block head %}{% endblock %}
     </head>
     <body
-        class="grid-rows-main dark dark:bg-black dark:text-white bg-white text-black p-4"
+        class="grid min-h-screen min-w-screen grid-rows-main dark dark:bg-black dark:text-white bg-white text-black p-4"
     >
         <header>{% include "header.html" %}</header>
         <main>{% block content %}{% endblock %}</main>

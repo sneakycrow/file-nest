@@ -5,7 +5,7 @@ use axum::extract::{ws::WebSocket, State, WebSocketUpgrade};
 use futures::{sink::SinkExt, stream::StreamExt};
 use serde::Serialize;
 use sqlx::postgres::PgListener;
-use tokio::sync::mpsc;
+use tokio::sync::broadcast;
 
 use crate::AppState;
 
@@ -32,8 +32,8 @@ async fn handle_socket(socket: WebSocket, state: Arc<AppState>) {
     let (mut sender, mut receiver) = socket.split();
 
     // Create a new sender/receiver for sending/receiving events from Postgres
-    let (ev_sender, mut ev_receiver): (mpsc::Sender<Event>, mpsc::Receiver<Event>) =
-        mpsc::channel(100);
+    let (ev_sender, mut ev_receiver): (broadcast::Sender<Event>, broadcast::Receiver<Event>) =
+        broadcast::channel(100);
 
     // Spawn a task for listening for notifications from Postgres on the upload_status trigger
     tokio::spawn(async move {
@@ -44,24 +44,26 @@ async fn handle_socket(socket: WebSocket, state: Arc<AppState>) {
 
         // When we receive a notification, parse it into an Event and pass it to the sender
         while let Ok(notification) = listener.recv().await {
-            tracing::debug!("Notification received!");
             let payload = notification.payload();
             let parts: Vec<&str> = payload.split(',').collect();
-            tracing::debug!("Payload: {:?}", payload);
-            tracing::debug!("Parts: {:?}", parts);
+            tracing::debug!(
+                "Notification received! Payload: {:?}, Parts: {:?}",
+                payload,
+                parts
+            );
             if parts.len() == 2 {
                 let event = Event::VideoProcessingStatus {
                     video_id: parts[0].to_string(),
                     status: parts[1].to_string(),
                 };
-                tracing::debug!("Outputting parsed event");
                 let _ = ev_sender.send(event);
             }
         }
     });
     // Send events to the client
     let mut send_task = tokio::spawn(async move {
-        while let Some(event) = ev_receiver.recv().await {
+        while let Ok(event) = ev_receiver.recv().await {
+            tracing::debug!("Received parsed event, sending to client");
             let server_message = ServerMessage { event };
             if let Ok(json) = serde_json::to_string(&server_message) {
                 if sender
