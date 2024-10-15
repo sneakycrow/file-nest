@@ -1,4 +1,4 @@
-use crate::queue::{Job, Message};
+use crate::{Job, Message};
 use sqlx::types::Json;
 use uuid::Uuid;
 

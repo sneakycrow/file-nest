@@ -5,23 +5,10 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
-sqlx = { version = "0.7", features = [
-    "runtime-tokio-rustls",
-    "postgres",
-    "chrono",
-    "uuid",
-    "json",
-] }
-chrono = "0.4"
 db = { path = "../libs/db" }
+anyhow = "1.0"
 grpc = { path = "../libs/grpc" }
-uuid = { version = "1", features = ["serde", "v4"] }
-async-trait = "0.1"
-serde = { version = "1", features = ["derive"] }
-thiserror = "1"
-anyhow = "1"
-ulid = { version = "1", features = ["uuid"] }
-futures = "0.3"
+queue = { path = "../libs/queue" }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tonic = "0.12"

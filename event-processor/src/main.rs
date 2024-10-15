@@ -1,19 +1,12 @@
-mod error;
-mod job;
-mod queue;
-mod runner;
 mod server;
 
 use std::sync::Arc;
 
-pub use error::Error;
-use queue::PostgresQueue;
-use runner::run_worker;
+use queue::{runner::run_worker, PostgresQueue};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 const CONCURRENCY: usize = 50;
 
-// TODO: Add intake for passing jobs into queue
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     // Start the tracer
@@ -36,6 +29,6 @@ async fn main() -> Result<(), anyhow::Error> {
     tracing::debug!("Starting gRPC server");
     server::start_server(queue)
         .await
-        .map_err(|_err| Error::Internal("Could not start grpc server".to_string()))?;
+        .expect("Could not start gRPC server");
     Ok(())
 }
