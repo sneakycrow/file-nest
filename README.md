@@ -1,4 +1,6 @@
-# file-nest
+<img src="./assets/logo.svg" width="100" />
+
+<h1>file-nest</h1>
 
 [![build](https://github.com/sneakycrow/file-nest/actions/workflows/build.yml/badge.svg)](https://github.com/sneakycrow/file-nest/actions/workflows/build.yml)
 
