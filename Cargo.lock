@@ -532,6 +532,7 @@ dependencies = [
  "futures",
  "grpc",
  "prost",
+ "queue",
  "serde",
  "sqlx",
  "thiserror",
@@ -1449,6 +1450,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4759aa0d3a6232fb8dbdb97b61de2c20047c68aca932c7ed76da9d788508d670"
 dependencies = [
  "prost",
+]
+
+[[package]]
+name = "queue"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "chrono",
+ "db",
+ "futures",
+ "grpc",
+ "prost",
+ "serde",
+ "sqlx",
+ "thiserror",
+ "tokio",
+ "tonic",
+ "tracing",
+ "tracing-subscriber",
+ "ulid",
+ "uuid",
 ]
 
 [[package]]

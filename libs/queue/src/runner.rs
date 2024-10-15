@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::queue::{Job, Message, Queue};
+use crate::{Job, Message, Queue};
 use futures::{stream, StreamExt};
 use sqlx::{Pool, Postgres};
 use std::{sync::Arc, time::Duration};

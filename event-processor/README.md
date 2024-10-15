@@ -1,3 +1,4 @@
-# video-processor
+# event-processor
 
-video-processor is a binary that creates streams from a video file
+Event processor is a gRPC + Queue system for processing different kinds of events in the file-nest projects, such as
+video processing requests.

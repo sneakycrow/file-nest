@@ -6,7 +6,7 @@ use grpc::video_processing;
 use video_processing::raw_video_processor_server::{RawVideoProcessor, RawVideoProcessorServer};
 use video_processing::{ProcessRawVideoRequest, ProcessRawVideoResponse};
 
-use crate::queue::{Message, Queue};
+use queue::{Message, Queue};
 
 #[derive(Debug)]
 pub struct VideoProcessorImpl {
