@@ -526,22 +526,14 @@ name = "event-processor"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "async-trait",
- "chrono",
  "db",
- "futures",
  "grpc",
  "prost",
  "queue",
- "serde",
- "sqlx",
- "thiserror",
  "tokio",
  "tonic",
  "tracing",
  "tracing-subscriber",
- "ulid",
- "uuid",
 ]
 
 [[package]]
