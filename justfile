@@ -15,7 +15,7 @@ start:
     cargo run -p api
 
 dev:
-    bacon ex -- api
+    bacon run -- api
 
 migrate:
     sqlx migrate run
