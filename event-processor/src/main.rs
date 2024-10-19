@@ -5,7 +5,7 @@ use std::sync::Arc;
 use queue::{runner::run_worker, PostgresQueue};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-const CONCURRENCY: usize = 50;
+const CONCURRENCY: usize = 5;
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
