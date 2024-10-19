@@ -38,6 +38,10 @@ pub struct Job {
 /// The payload of the job, containing the different jobs and their required data
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Message {
+    /// Our primary processing job
+    /// Takes in a raw video (mp4) and converts it into an HLS stream
+    // NOTE: We intentionally have the user provide the path to save us a db query to get it, but we
+    // need a db query after processing to update the job status
     ProcessRawVideo { path: String, video_id: String },
 }
 

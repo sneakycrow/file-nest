@@ -4,8 +4,10 @@ use futures::{stream, StreamExt};
 use sqlx::{Pool, Postgres};
 use std::{sync::Arc, time::Duration};
 
+/// Runs a loop that pulls jobs from the queue and runs <concurrency> jobs each loop
 pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize, db_conn: &Pool<Postgres>) {
     loop {
+        // Pulls jobs from the queue
         let jobs = match queue.pull(concurrency as i32).await {
             Ok(jobs) => jobs,
             Err(err) => {
@@ -16,12 +18,12 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize, db_conn: &Poo
                 Vec::new()
             }
         };
-
+        // Just for debugging the amount of jobs a queue has pulled in
         let number_of_jobs = jobs.len();
         if number_of_jobs > 0 {
             tracing::debug!("Fetched {} jobs", number_of_jobs);
         }
-
+        // Run each jobs concurrently
         stream::iter(jobs)
             .for_each_concurrent(concurrency, |job| async {
                 tracing::debug!("Starting job {}", job.id);
@@ -43,13 +45,16 @@ pub async fn run_worker(queue: Arc<dyn Queue>, concurrency: usize, db_conn: &Poo
                 }
             })
             .await;
-
+        // Take a break for a bit, we don't need to run every moment (our jobs are unlikely to complete that quickly)
         tokio::time::sleep(Duration::from_millis(125)).await;
     }
 }
 
+/// Individually processes a single job, based on its Job message type
 async fn handle_job(job: Job, db: &Pool<Postgres>) -> Result<(), Error> {
     match job.message {
+        // TODO: If you want to do other kinds of processing, you can define their jobs here
+        // Process Raw Videos into HLS streams
         message @ Message::ProcessRawVideo { .. } => {
             tracing::debug!("Processing raw video: {:?}", &message);
             // Get the required data to parse the video
