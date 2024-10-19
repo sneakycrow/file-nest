@@ -10,8 +10,6 @@ use std::fmt::Debug;
 use ulid::Ulid;
 use uuid::Uuid;
 
-const MAX_FAILED_ATTEMPTS: i32 = 3;
-
 #[async_trait::async_trait]
 pub trait Queue: Send + Sync + Debug {
     /// pushes a job to the queue
@@ -137,7 +135,7 @@ impl Queue for PostgresQueue {
             .bind(now)
             .bind(PostgresJobStatus::Queued)
             .bind(now)
-            .bind(MAX_FAILED_ATTEMPTS)
+            .bind(self.max_attempts as i32)
             .bind(number_of_jobs)
             .fetch_all(&self.db)
             .await?;
