@@ -1,4 +1,4 @@
 [workspace]
-members = ["api", "event-processor", "libs/*"]
+members = ["api", "event-processor", "libs/*", "stream-uploader/src-tauri"]
 
 resolver = "2"
