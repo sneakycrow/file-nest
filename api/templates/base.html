@@ -17,7 +17,7 @@
     <body
         class="grid min-h-screen min-w-screen grid-rows-main dark dark:bg-black dark:text-white bg-white text-black p-4"
     >
-        <header>{% include "header.html" %}</header>
+        {% include "header.html" %}
         <main>{% block content %}{% endblock %}</main>
         <footer>{% include "footer.html" %}</footer>
         {% block scripts %}{% endblock %}
