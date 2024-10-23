@@ -7,9 +7,13 @@ install:
     cargo check
     npm install
 
-build:
+build-api:
     cargo build --release
+
+build-fe:
     npm run build
+
+build: build-api build-fe
 
 start:
     cargo run -p api
