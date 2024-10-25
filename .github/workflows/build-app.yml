@@ -89,5 +89,5 @@ jobs:
         with:
           name: stream-uploader-windows
           path: |
-            stream-uploader/src-tauri/target/release/bundle/msi/*_x64_en-US.msi
-            stream-uploader/src-tauri/target/release/bundle/nsis/*_x64-setup.exe
+            target/release/bundle/msi/*_x64_en-US.msi
+            target/release/bundle/nsis/*_x64-setup.exe
