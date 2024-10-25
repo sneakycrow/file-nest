@@ -8,10 +8,13 @@ install:
     npm install
 
 build-api:
-    cargo build --release
+    cargo build -p api
 
 build-fe:
     npm run build
+
+build-app:
+    cargo build -p stream-uploader
 
 build: build-api build-fe
 
