@@ -15,11 +15,16 @@ build-fe:
 
 build: build-api build-fe
 
-start:
+start: start-api
+start-api:
     cargo run -p api
 
-dev:
+dev: dev-api
+dev-api:
     bacon run -- api
+
+dev-app:
+    bacon run -- stream-uploader
 
 migrate:
     sqlx migrate run
