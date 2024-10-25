@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - "!src-tauri/src/uploader/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
