@@ -44,7 +44,7 @@ pub fn run() {
                 // Hides the window without closing the app from the system tray
                 #[cfg(not(target_os = "macos"))]
                 {
-                    event.window().hide().unwrap();
+                    window.hide().unwrap();
                 }
 
                 #[cfg(target_os = "macos")]
