@@ -80,8 +80,8 @@ jobs:
         with:
           name: stream-uploader-macos
           path: |
-            stream-uploader/src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
-            stream-uploader/src-tauri/target/universal-apple-darwin/release/bundle/macos/*.app
+            target/universal-apple-darwin/release/bundle/dmg/*.dmg
+            target/universal-apple-darwin/release/bundle/macos/*.app
 
       - name: Upload artifacts (Windows)
         if: matrix.platform == 'windows-latest'
