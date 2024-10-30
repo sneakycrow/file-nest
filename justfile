@@ -27,7 +27,7 @@ dev-api:
     bacon run -- api
 
 dev-app:
-    bacon run -- stream-uploader
+    just stream-uploader/dev
 
 migrate:
     sqlx migrate run

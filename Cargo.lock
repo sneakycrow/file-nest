@@ -2686,6 +2686,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "obws"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "815d78d5e0a99aa961c05aa07b52d82b2bd2d4414b0ff0a2a3db7c12332fa807"
+dependencies = [
+ "async-stream",
+ "base64 0.22.1",
+ "bitflags 2.6.0",
+ "futures-util",
+ "rgb",
+ "semver",
+ "serde",
+ "serde_json",
+ "serde_repr",
+ "serde_with",
+ "sha2",
+ "thiserror",
+ "time",
+ "tokio",
+ "tokio-tungstenite",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.20.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3395,6 +3420,12 @@ dependencies = [
  "web-sys",
  "windows-registry",
 ]
+
+[[package]]
+name = "rgb"
+version = "0.8.50"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "57397d16646700483b67d2dd6511d79318f9d057fdbd21a4066aeac8b41d310a"
 
 [[package]]
 name = "ring"
@@ -4135,12 +4166,16 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 name = "stream-uploader"
 version = "0.1.0"
 dependencies = [
+ "futures",
+ "futures-util",
+ "obws",
  "serde",
  "serde_json",
  "tauri",
  "tauri-build",
  "tauri-plugin-positioner",
  "tauri-plugin-shell",
+ "tokio",
  "tracing",
  "tracing-subscriber",
 ]

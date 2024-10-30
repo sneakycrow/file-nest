@@ -25,3 +25,7 @@ serde_json = "1"
 tauri-plugin-positioner = { version = "2.0.2", features = ["tray-icon"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+obws = { version = "0.13", features = ["events"] }
+tokio = { version = "1.0", features = ["full"] }
+futures = "0.3"
+futures-util = { version = "0.3.30", features = ["sink"] }

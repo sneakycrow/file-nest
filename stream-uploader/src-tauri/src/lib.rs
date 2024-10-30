@@ -1,5 +1,7 @@
 mod command;
+mod obs;
 
+use obs::ObsHandler;
 use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Manager,
@@ -7,7 +9,6 @@ use tauri::{
 
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // Start the tracer
     tracing_subscriber::registry()
@@ -20,6 +21,21 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_positioner::init())
         .setup(|app| {
+            // Initialize OBS handler
+            let app_handle = app.handle().clone();
+            tauri::async_runtime::spawn(async move {
+                match ObsHandler::new(app_handle).await {
+                    Ok(handler) => {
+                        if let Err(e) = handler.start_monitoring().await {
+                            tracing::error!("Error monitoring OBS: {}", e);
+                        }
+                    }
+                    Err(e) => {
+                        tracing::error!("Failed to connect to OBS: {}", e);
+                    }
+                }
+            });
+            // Initialize tray icon
             TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
                 .on_tray_icon_event(|tray, event| match event {
